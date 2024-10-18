@@ -212,3 +212,26 @@ const users: [string, number][] = [
 ```
 <br>
 
+## :label: Type alias
+- Type alias
+   ```typescript
+   type User = {
+     id: number
+     name: string
+     nickname: string
+     birth: string
+     bio: string
+     location: string
+   }
+   
+   let user: User = {
+     id: 1,
+     name: 'Jisung',
+     nickname: 'kurt',
+     birth: '2000.01.01',
+     bio: 'hi',
+     location: 'Daegu'
+   }
+   ```
+<br>
+   
