@@ -7,6 +7,7 @@ My personal playground for typescript coding and learning.
 - [TypeScript](#label-typescript)
 - [Compiler options(tsconfig.json)](#label-compiler-options(tsconfig-json))
 - [Types](#label-types)
+- [Index signature](#label-index-signature)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -235,3 +236,33 @@ const users: [string, number][] = [
    ```
 <br>
    
+## :label: Index signature
+- Index signature
+   ```typescript
+   type CountryCodes = {
+     [key: string]: string
+   }
+   let CountryCodes = {
+     Korea: 'ko',
+     UnitedState: 'us',
+     UnitedKingdom: 'uk'
+   }
+   ```
+<br>
+
+- Caveats
+   - When an index signature is defined, all keys must have a consistent type.
+      ```typescript
+      type CountryCodes = {
+        [key: string]: string
+        Korea: number // error - Property 'Korea' of type 'number' is not assignable to 'string' index type 'string'.
+      }
+      let CountryCodes = {
+        Korea: 82,
+        UnitedState: 'us',
+        UnitedKingdom: 'uk'
+      }
+      ```
+<br>
+   
+
