@@ -8,6 +8,7 @@ My personal playground for typescript coding and learning.
 - [Compiler options(tsconfig.json)](#label-compiler-options(tsconfig-json))
 - [Types](#label-types)
 - [Index signature](#label-index-signature)
+- [Enum](#label-enum)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -265,4 +266,45 @@ const users: [string, number][] = [
       ```
 <br>
    
+## :label: Enum
+- Enums allow a developer to define a set of named constants. 
+- Using enums can make it easier to document intent, or create a set of distinct cases. 
+- TypeScript provides both numeric and string-based enums.
 
+### Numeric enums
+   ```typescript
+   enum Role {
+     ADMIN, // 0
+     USER,  // 1
+     GUEST  // 2
+   }
+   const user1 = {
+     name: 'Jisung',
+     role: Role.ADMIN
+   }
+   
+   const user2 = {
+     name: 'Mike',
+     role: Role.USER
+   }
+   
+   const user3 = {
+     name: 'Tom',
+     role: Role.GUEST
+   }
+   ```
+<br>
+
+### String enums
+   ```typescript
+   enum Language {
+     korea = 'ko',
+     english = 'en'
+   }
+   
+   const user = {
+     name: 'Jisung',
+     language: Language.korea
+   }
+   ```
+<br>
