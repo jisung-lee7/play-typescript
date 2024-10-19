@@ -9,6 +9,7 @@ My personal playground for typescript coding and learning.
 - [Types](#label-types)
 - [Index signature](#label-index-signature)
 - [Enum](#label-enum)
+- [Any](#label-any)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -306,5 +307,25 @@ const users: [string, number][] = [
      name: 'Jisung',
      language: Language.korea
    }
+   ```
+<br>
+   
+## :label: Any
+- TypeScript also has a special type, any, that you can use whenever you don’t want a particular value to cause typechecking errors.
+- When a value is of type any, you can access any properties of it (which will in turn be of type any), call it like a function, assign it to (or from) a value of any type, or pretty much anything else that’s syntactically legal.
+- The any type is useful when you don’t want to write out a long type just to convince TypeScript that a particular line of code is okay.
+   ```typescript
+   let anyValue: any = 10
+   anyValue = 'hello'
+   
+   anyValue = true
+   anyValue = {}
+   anyValue = () => {}
+   
+   anyValue.toUpperCase()
+   anyValue.toFixed()
+   
+   let num: number = 10
+   num = anyValue
    ```
 <br>
