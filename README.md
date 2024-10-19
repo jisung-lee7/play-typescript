@@ -10,6 +10,7 @@ My personal playground for typescript coding and learning.
 - [Index signature](#label-index-signature)
 - [Enum](#label-enum)
 - [Any](#label-any)
+- [Unknown](#label-unknown)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -327,5 +328,26 @@ const users: [string, number][] = [
    
    let num: number = 10
    num = anyValue
+   ```
+<br>
+   
+## :label: Unknown
+- The unknown type represents any value. This is similar to the any type, but is safer because it’s not legal to do anything with an unknown value.
+- This is useful when describing function types because you can describe functions that accept any value without having any values in your function body.
+- Conversely, you can describe a function that returns a value of unknown type.
+   ```typescript
+   let unknownValue: unknown
+   
+   unknownValue = ''
+   unknownValue = 1
+   unknownValue = () => {}
+   
+   let num: number = 10
+   num = unknownValue // error - Type 'unknown' is not assignable to type 'number'.
+   
+   // if you want to use the above, do it like this:
+   if (typeof unknownValue === 'number') {
+     num = unknownValue
+   }
    ```
 <br>
