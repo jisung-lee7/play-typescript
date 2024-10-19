@@ -12,6 +12,7 @@ My personal playground for typescript coding and learning.
 - [Any](#label-any)
 - [Unknown](#label-unknown)
 - [Void](#label-void)
+- [Never](#label-never)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -368,5 +369,26 @@ const users: [string, number][] = [
    a = {} // error - Type '{}' is not assignable to type 'void'.
    a = undefined
    a = null
+   ```
+<br>
+   
+## :label: Never
+- The never type represents values which are never observed. 
+- In a return type, this means that the function throws an exception or terminates execution of the program.
+- never also appears when TypeScript determines there’s nothing left in a union.
+   ```typescript
+   function func(): never {
+     throw new Error()
+   }
+   
+   let a: never
+   a = 1 // error - Type 'number' is not assignable to type 'void'.
+   a = {} // error - Type '{}' is not assignable to type 'void'.
+   a = '' // error - Type 'string' is not assignable to type 'void'.
+   a = undefined // error - Type 'undefined' is not assignable to type 'void'.
+   a = null // error - Type 'null' is not assignable to type 'void'.
+   
+   let anyValue: any
+   a = anyValue // error - Type 'any' is not assignable to type 'void'.
    ```
 <br>
