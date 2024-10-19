@@ -11,6 +11,7 @@ My personal playground for typescript coding and learning.
 - [Enum](#label-enum)
 - [Any](#label-any)
 - [Unknown](#label-unknown)
+- [Void](#label-void)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -349,5 +350,23 @@ const users: [string, number][] = [
    if (typeof unknownValue === 'number') {
      num = unknownValue
    }
+   ```
+<br>
+   
+## :label: Void
+- void represents the return value of functions which don’t return a value.
+- In JavaScript, a function that doesn’t return any value will implicitly return the value undefined. 
+- However, void and undefined are not the same thing in TypeScript.
+   ```typescript
+   function func(): void {
+     console.log('hello')
+   }
+   
+   let a: void
+   a = 1 // error - Type 'number' is not assignable to type 'void'.
+   a = 'hello' // error - Type 'string' is not assignable to type 'void'.
+   a = {} // error - Type '{}' is not assignable to type 'void'.
+   a = undefined
+   a = null
    ```
 <br>
