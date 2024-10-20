@@ -14,6 +14,7 @@ My personal playground for typescript coding and learning.
 - [Void](#label-void)
 - [Never](#label-never)
 - [Type compatibility](#label-type-compatibility)
+- [Algebraic type](#label-algebraic-type)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -502,3 +503,85 @@ const users: [string, number][] = [
    - When you assign an object literal to a variable of a specific type, typescript checks for any extra properties not described by that type.
 <br>
   
+## :label: Algebraic type
+- A newly created type formed by combining different types.
+<br>
+
+### Union type
+   ```typescript
+   let a: string | number // string number union type
+   
+   a = 'hello'
+   a = 1
+   
+   // array
+   let arr: (number | string | boolean)[] = [1, 'hello', true]
+   console.log(arr) // Expected output: [ 1, 'hello', true ]
+   
+   // object
+   type Dog = {
+     name: string
+     color: string
+   }
+   
+   type Person = {
+     name: string
+     language: string
+   }
+   
+   type UnionObject = Dog | Person
+   
+   let union1: UnionObject = {
+     name: '',
+     color: ''
+   }
+   console.log(union1) // Expected output: { name: '', color: '' }
+   
+   let union2: UnionObject = {
+     name: '',
+     language: ''
+   }
+   console.log(union2) // Expected output: { name: '', language: '' }
+   
+   let union3: UnionObject = {
+     name: '',
+     color: '',
+     language: ''
+   }
+   console.log(union3) // Expected output: { name: '', color: '', language: '' }
+   
+   // error - It must be either { name, color } or { name, language }, or { name, color, language }.
+   let union4: UnionObject = {
+     name: ''
+   }
+   ```
+<br>
+   
+### Intersection type
+   ```typescript
+   // primitive type
+   let a: number & string // never type
+   console.log(a) // Expected output: undefined
+   
+   // object
+   type Dog = {
+     name: string
+     color: string
+   }
+   
+   type Person = {
+     name: string
+     language: string
+   }
+   
+   type Intersection = Dog & Person
+   
+   let intersection: Intersection = {
+     name: '',
+     color: '',
+     language: ''
+   }
+   
+   console.log(intersection) // Expected output: { name: '', color: '', language:'' }
+   ```
+<br>
