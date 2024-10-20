@@ -87,6 +87,10 @@ My personal playground for typescript coding and learning.
    - Specifies the files or directories to include in the compilation. 
 
 ## :label: Types
+### Type hierarchy
+<img width="2297" alt="image" src="https://github.com/user-attachments/assets/23b7f690-d28d-4aa4-abae-8c4d53733a3f">
+<br>
+   
 ### Primitive types
 - number
    ```typescript
