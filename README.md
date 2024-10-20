@@ -13,6 +13,7 @@ My personal playground for typescript coding and learning.
 - [Unknown](#label-unknown)
 - [Void](#label-void)
 - [Never](#label-never)
+- [Type compatibility](#label-type-compatibility)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -396,3 +397,108 @@ const users: [string, number][] = [
    a = anyValue // error - Type 'any' is not assignable to type 'void'.
    ```
 <br>
+
+## :label: Type compatibility
+### Type compatibility table
+<img width="909" alt="image" src="https://github.com/user-attachments/assets/3c90180b-1220-41ea-b606-d7a75c87fc1d">
+<br>
+
+### Type compatibility
+- In typescript, upcasting is allowed for all types, but downcasting is not allowed.
+   ```typescript
+   let unknownValue: unknown
+   let anyValue: any
+   let numValue: number
+   let voidValue: void
+   let stringValue: string
+   let boolValue: boolean
+   
+   unknownValue = anyValue
+   unknownValue = numValue
+   unknownValue = voidValue
+   unknownValue = stringValue
+   unknownValue = boolValue
+   
+   numValue = unknownValue    // error - Type 'unknown' is not assignable to type 'number'.
+   voidValue = unknownValue   // error - Type 'unknown' is not assignable to type 'void'.
+   stringValue = unknownValue // error - Type 'unknown' is not assignable to type 'string'.
+   boolValue = unknownValue   // error - Type 'unknown' is not assignable to type 'boolean'.
+   ```
+   <br>
+
+- Caveats
+   - You need to be aware of a few exceptions:
+      - unknown type can be downcast to any type specifically. In other words, you can assign an unknown type to an any type. 
+         ```typescript
+         let unknownValue: unknown
+         let anyValue: any
+         
+         anyValue = unknownValue
+         ```
+         <br>
+      - The any type ignores the type hierarchy.
+      - So it can be downcast to any other type, and any type can be upcast to any.   
+      - Except for the never type.
+         ```typescript
+         let unknownValue: unknown
+         let anyValue: any
+         let numValue: number
+         let voidValue: void
+         let stringValue: string
+         let boolValue: boolean
+         let neverValue: never
+         
+         // upcasting
+         anyValue = unknownValue
+         anyValue = numValue
+         anyValue = voidValue
+         anyValue = stringValue
+         anyValue = boolValue
+         anyValue = neverValue
+         
+         // downcasting
+         unknownValue = anyValue
+         numValue = anyValue
+         voidValue = anyValue
+         stringValue = anyValue
+         boolValue = anyValue
+         neverValue = anyValue // error - Type 'any' is not assignable to type 'never'.
+         ```
+      <br>
+   
+#### Object type compatibility
+- Typescript is property-based type system.
+   ```typescript
+   type Animal = {
+     name: string
+     color: string
+   }
+   
+   type Dog = {
+     name: string
+     color: string
+     breed: string
+   }
+   
+   let animal: Animal = {
+     name: 'Cat',
+     color: 'white'
+   }
+   
+   let dog: Dog = {
+     name: 'ppoddo',
+     color: 'gold',
+     breed: 'maltipoo'
+   }
+   
+   // animal: super, dog: sub
+   animal = dog // upcasting
+   dog = animal // error - downcasting
+   ```
+<br>
+
+- Excess property checking(error)
+   - Excess property checking is a feature that ensures that __object literals__ do not have properties that are not defined in their corresponding type or interface.
+   - When you assign an object literal to a variable of a specific type, typescript checks for any extra properties not described by that type.
+<br>
+  
