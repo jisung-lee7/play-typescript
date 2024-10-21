@@ -17,6 +17,7 @@ My personal playground for typescript coding and learning.
 - [Algebraic type](#label-algebraic-type)
 - [Type inference](#label-type-inference)
 - [Type assertion](#label-type-assertion)
+- [Type narrowing](#label-type-narrowing)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -710,5 +711,39 @@ const users: [string, number][] = [
    
    const len1: number = post.author?.length //error - Type 'number | undefined' is not assignable to type 'number'.
    const len2: number = post.author!.length // non-null assertion
+   ```
+<br>
+   
+## :label: Type narrowing
+   ```typescript
+     type Person = {
+       name: string
+       age: number
+     }
+   
+     function func(value: number | string | Date | null | Person) {
+       value // value: number | string
+       value.toFixed() // error - Property 'toFixed' does not exist on type 'string | number'.
+       value.toUpperCase() // error - Property 'toUpperCase' does not exist on type 'string | number'.
+   
+       // type guard
+       if (typeof value === 'number') {
+         console.log(value.toFixed()) // value: number
+       }
+       // type guard
+       else if (typeof value === 'string') {
+         console.log(value.toUpperCase()) // value: number
+       }
+       // type guard
+       else if (value instanceof Date) {
+         console.log(value.getTime())
+       }
+   
+       // type guard
+       else if (value && 'age' in value) {
+         console.log(`${value.name} is ${value.age} years old.`)
+       }
+     }
+   
    ```
 <br>
