@@ -15,6 +15,7 @@ My personal playground for typescript coding and learning.
 - [Never](#label-never)
 - [Type compatibility](#label-type-compatibility)
 - [Algebraic type](#label-algebraic-type)
+- [Type inference](#label-type-inference)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -585,3 +586,36 @@ const users: [string, number][] = [
    console.log(intersection) // Expected output: { name: '', color: '', language:'' }
    ```
 <br>
+   
+## :label: Type inference
+- When a type specified, the variable will explicitly have an any type.
+   - Therefore, the following all have the any type.
+      ```typescript
+      let value: any // value: any
+      
+      value = 10 // value: any
+      value.toFixed() // value: any
+      value.toUpperCase() // value: any
+      
+      value = 'hello' // value: any
+      value.toUpperCase() // value: any
+      value.toFixed() // value: any
+      ```
+<br>
+
+- When a type is not specified, the variable will implicitly have an any type.
+   - The implicit any type evolves as shown below:
+      ```typescript
+      // if nothing is assigned, the any type will be inferred.
+      let value // value: any
+      
+      value = 10 // value: any
+      value.toFixed() // value: number
+      value.toUpperCase() // value: number, so error - Property 'toUpperCase' does not exist on type 'number'.
+      
+      value = 'hello' // value: any
+      value.toUpperCase() // value: string
+      value.toFixed() // value: string, so error - Property 'toFixed' does not exist on type 'string'.
+      ```
+<br>
+
