@@ -16,6 +16,7 @@ My personal playground for typescript coding and learning.
 - [Type compatibility](#label-type-compatibility)
 - [Algebraic type](#label-algebraic-type)
 - [Type inference](#label-type-inference)
+- [Type assertion](#label-type-assertion)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -618,4 +619,96 @@ const users: [string, number][] = [
       value.toFixed() // value: string, so error - Property 'toFixed' does not exist on type 'string'.
       ```
 <br>
+   
+## :label: Type assertion
+- Type assertion in typescript allows developers to explicitly define a value’s type, instructing the compiler to treat it as such, even if it cannot infer it.
+- This enables overriding the inferred type system when developers are confident in the value’s type.
+- When using the value as Type syntax, the type of value must be either a supertype or a subtype of Type.
+   ```typescript
+   type Person = {
+     name: string
+     age: number
+   }
+   
+   {
+     let person: Person = {} // Type '{}' is missing the following properties from type 'Person': name, age
+     person.name = 'jisung'
+     person.age = 20
+   }
+   
+   {
+     let person = {}
+     person.name = 'jisung' // error - Property 'name' does not exist on type '{}'.
+     person.age = 20 // error - Property 'age' does not exist on type '{}'.
+   }
+   
+   {
+     let person = {} as Person // type assertion
+     person.name = 'jisung'
+     person.age = 20
+   }
+   ```
+<br>
+   
+   ```typescript
+   type Dog = {
+     name: string
+     color: string
+   }
+   
+   {
+     let dog: Dog = {
+       name: 'ppoddo',
+       color: 'gold',
+       breed: 'maltipoo' // error - Object literal may only specify known properties, and 'breed' does not exist in type 'Dog'.
+     }
+   }
+   
+   {
+     let dog: Dog = {
+       name: 'ppoddo',
+       color: 'gold',
+       breed: 'maltipoo'
+     } as Dog // type assertion, but it may cause runtime errors, so caution is needed.
+   }
+   ```
+<br>
+   
+   ```typescript
+   let num1 = 10 as never // num1: never
+   let num2 = 10 as unknown // num2: unknown
+   
+   let num3 = 10 as string // error - Conversion of type 'number' to type 'string' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+   ```
+<br>
+   
+### Const assertion
+   ```typescript
+   let num = 10 as const // num: 10 - variable can not change
+   num = 11 // error - Type '11' is not assignable to type '10'.
+   
+   let dog = {
+     name: 'ppoddo',
+     color: 'gold'
+   } as const // Property values cannot be changed.
+   
+   dog.color = 'white' // error - Cannot assign to 'color' because it is a read-only property.
+   ```
+<br>
 
+### Non-null assertion
+   ```typescript
+   type Post = {
+     title: string
+     author?: string
+   }
+   
+   let post: Post = {
+     title: 'post1',
+     author: 'jisung'
+   }
+   
+   const len1: number = post.author?.length //error - Type 'number | undefined' is not assignable to type 'number'.
+   const len2: number = post.author!.length // non-null assertion
+   ```
+<br>
