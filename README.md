@@ -19,6 +19,7 @@ My personal playground for typescript coding and learning.
 - [Type assertion](#label-type-assertion)
 - [Type narrowing](#label-type-narrowing)
 - [Discriminated union(tagged union)](#label-discriminated-union(tagged-union))
+- [Function](#label-function)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -928,6 +929,211 @@ const users: [string, number][] = [
      state: 'SUCCESS',
      response: {
        data: 'response'
+     }
+   }
+   ```
+<br>
+   
+## :label: Function
+### Rest parameter
+   ```typescript
+   const getSum = (...rest: number[]) => {
+     let sum = 0
+     rest.forEach((item) => {
+       sum = sum + item
+     })
+   
+     return sum
+   }
+   
+   getSum(1, 2, 3)
+   getSum(1, 2, 3, 4, 5, 6)
+   ```
+<br>
+   
+   - use with tuple
+      ```typescript
+      const getSum = (...rest: [number, number, number]) => {
+        let sum = 0
+        rest.forEach((item) => {
+          sum = sum + item
+        })
+      
+        return sum
+      }
+      
+      getSum(1, 2, 3)
+      getSum(1, 2, 3, 4, 5, 6) // error - Expected 3 arguments, but got 6.
+      ```
+<br>
+   
+### Function type expression
+   ```typescript
+   type Operation = (a: number, b: number) => number
+   
+   const add: Operation = (a, b) => a + b
+   const sub: Operation = (a, b) => a - b
+   const multiply: Operation = (a, b) => a * b
+   const divide: Operation = (a, b) => a / b
+   ```
+<br>
+   
+### Call signature
+   ```typescript
+   type Operation = {
+     (a: number, b: number): number
+   }
+   
+   const add: Operation = (a, b) => a + b
+   const sub: Operation = (a, b) => a - b
+   const multiply: Operation = (a, b) => a * b
+   const divide: Operation = (a, b) => a / b
+   ```
+<br>
+   
+### Function type compatibility
+1. Is the return type compatible?
+   ```typescript
+   type A = () => number
+   type B = () => 10
+   
+   let a: A = () => 10
+   let b: B = () => 10
+   
+   // A: super, B: sub
+   a = b // upcasting
+   b = a // error - downcasting
+   ```
+<br>
+
+2. Is the parameter type compatible?
+   1. When the number of parameters is the same
+      ```typescript
+      {
+        type C = (value: number) => void
+        type D = (value: 10) => void
+      
+        let c: C = (value) => {}
+        let d: D = (value) => {}
+      
+        // When determining function type compatibility based on parameter types, upcasting is not allowed, but downcasting is possible.
+        c = d // error - upcasting
+        d = c // downcasting
+      }
+      
+      {
+        // super
+        type Animal = {
+          name: string
+        }
+      
+        // sub
+        type Dog = {
+          name: string
+          color: string
+        }
+      
+        let animalFunc = (animal: Animal) => {
+          console.log(animal.name)
+        }
+      
+        let dogFunc = (dog: Dog) => {
+          console.log(dog.name)
+          console.log(dog.color)
+        }
+      
+        // Type '(dog: Dog) => void' is not assignable to type '(animal: Animal) => void'.
+        // Types of parameters 'dog' and 'animal' are incompatible.
+        // Property 'color' is missing in type 'Animal' but required in type 'Dog'.
+        animalFunc = dogFunc // error
+      
+        let testFunc1 = (animal: Animal) => {
+          console.log(animal.name)
+          console.log(animal.color) // error - Property 'color' does not exist on type 'Animal'.
+        }
+      
+        dogFunc = animalFunc
+      
+        let testFunc2 = (dog: Dog) => {
+          console.log(dog.name)
+        }
+      }
+      ```
+   <br>
+
+   2. When the number of parameters is the same
+      ```typescript
+      type Func1 = (a: number, b: number) => void
+      type Func2 = (a: number) => void
+      
+      let func1: Func1 = (a, b) => {
+        console.log(`a=${a}, b=${b}`)
+      }
+      
+      let func2: Func2 = (a) => {
+        console.log(`a=${a}`)
+      }
+      
+      func1(1, 2) // Expected output: a=1, b=2
+      func2(3) // Expected output: a=3
+      
+      func1 = func2
+      func1(1, 2) // Expected output: a=1
+      
+      func2 = func1 // error - Type 'Func1' is not assignable to type 'Func2'. Target signature provides too few arguments. Expected 2 or more, but got 1.
+      ```
+      <br>
+
+### Overloading
+   ```typescript
+   // overload signature(=overload definition)(=overload declaration)
+   function func(a: number): void
+   function func(a: number, b: number, c: number): void
+   
+   // implementation signature
+   function func(a: number, b?: number, c?: number) {
+     if (typeof b === 'number' && typeof c === 'number') {
+       console.log(a + b + c)
+     } else {
+       console.log(a * 20)
+     }
+   }
+   
+   func() // error - Expected 1-3 arguments, but got 0.
+   func(1)
+   func(1, 2) // error - No overload expects 2 arguments, but overloads do exist that expect either 1 or 3 arguments.
+   func(1, 2, 3)
+   ```
+   <br>
+
+### Custom type guard
+   ```typescript
+   // if we cannot use discriminated union, we can use custom type guard
+   type Dog = {
+     name: string
+     isBark: boolean
+   }
+   
+   type Cat = {
+     name: string
+     isScratch: boolean
+   }
+   
+   type Animal = Dog | Cat
+   
+   function isDog(animal: Animal): animal is Dog {
+     return (animal as Dog).isBark !== undefined
+   }
+   
+   function isCat(animal: Animal): animal is Cat {
+     return (animal as Cat).isScratch !== undefined
+   }
+   
+   function warning(animal: Animal) {
+     if (isDog(animal)) {
+       console.log(`The type is Dog, isBark=${animal.isBark}`)
+     } else if ('isScratch' in animal) {
+       console.log(`The type is Cat, isScratch=${animal.isScratch}`)
      }
    }
    ```
