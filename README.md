@@ -18,6 +18,7 @@ My personal playground for typescript coding and learning.
 - [Type inference](#label-type-inference)
 - [Type assertion](#label-type-assertion)
 - [Type narrowing](#label-type-narrowing)
+- [Discriminated union(tagged union)](#label-discriminated-union(tagged-union))
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -745,5 +746,189 @@ const users: [string, number][] = [
        }
      }
    
+   ```
+<br>
+   
+## :label: Discriminated union(tagged union)
+- before use discriminated union
+   ```typescript
+   type Admin = {
+     name: string
+     kickCount: number
+   }
+   
+   type Member = {
+     name: string
+     point: number
+   }
+   
+   type Guest = {
+     name: string
+     visitCount: number
+   }
+   
+   type User = Admin | Member | Guest
+   
+   function login(user: User) {
+     if ('kickCount' in user) {
+       console.log(
+         `${user.name}, you have kicked out ${user.kickCount} users so far.`
+       )
+     } else if ('point' in user) {
+       console.log(
+         `${user.name}, you have collected ${user.point} points so far.`
+       )
+     } else {
+       console.log(
+         `${user.name}, you have visited ${user.visitCount} times so far.`
+       )
+     }
+   }
+   ```
+<br>
+
+- after use discriminated union
+   ```typescript
+   type Admin = {
+     tag: 'ADMIN'
+     name: string
+     kickCount: number
+   }
+   
+   type Member = {
+     tag: 'MEMBER'
+     name: string
+     point: number
+   }
+   
+   type Guest = {
+     tag: 'GUEST'
+     name: string
+     visitCount: number
+   }
+   
+   type User = Admin | Member | Guest
+   
+   function login(user: User) {
+     switch (user.tag) {
+       case 'ADMIN':
+         console.log(
+           `${user.name}, you have kicked out ${user.kickCount} users so far.`
+         )
+         break
+       case 'MEMBER':
+         console.log(
+           `${user.name}, you have collected ${user.point} points so far.`
+         )
+         break
+       case 'GUEST':
+         console.log(
+           `${user.name}, you have visited ${user.visitCount} times so far.`
+         )
+         break
+     }
+   }
+   ```
+<br>
+
+- before use discriminated union
+   ```typescript
+   type AsyncTask = {
+     state: 'LOADING' | 'FAILED' | 'SUCCESS'
+     error?: {
+       message: string
+     }
+     response?: {
+       data: string
+     }
+   }
+   
+   function processResult(task: AsyncTask) {
+     switch (task.state) {
+       case 'LOADING':
+         console.log('loading..')
+         break
+       case 'FAILED':
+         console.log(`error: ${task.error?.message}`)
+         break
+       case 'SUCCESS':
+         console.log(`success: ${task.response?.data}`)
+         break
+     }
+   }
+   
+   const loading: AsyncTask = {
+     state: 'LOADING'
+   }
+   
+   const failed: AsyncTask = {
+     state: 'FAILED',
+     error: {
+       message: 'error'
+     }
+   }
+   
+   const success: AsyncTask = {
+     state: 'SUCCESS',
+     response: {
+       data: 'response'
+     }
+   }
+   ```
+<br>
+
+- after use discriminated union
+   ```typescript
+   type LoadingTask = {
+     state: 'LOADING'
+   }
+   
+   type FailedTask = {
+     state: 'FAILED'
+     error: {
+       message: string
+     }
+   }
+   
+   type SuccessTask = {
+     state: 'SUCCESS'
+     response: {
+       data: string
+     }
+   }
+   
+   type AsyncTask = LoadingTask | FailedTask | SuccessTask
+   
+   function processResult(task: AsyncTask) {
+     switch (task.state) {
+       case 'LOADING':
+         console.log('loading..')
+         break
+       case 'FAILED':
+         console.log(`error: ${task.error.message}`)
+         break
+       case 'SUCCESS':
+         console.log(`success: ${task.response.data}`)
+         break
+     }
+   }
+   
+   const loading: AsyncTask = {
+     state: 'LOADING'
+   }
+   
+   const failed: AsyncTask = {
+     state: 'FAILED',
+     error: {
+       message: 'error'
+     }
+   }
+   
+   const success: AsyncTask = {
+     state: 'SUCCESS',
+     response: {
+       data: 'response'
+     }
+   }
    ```
 <br>
