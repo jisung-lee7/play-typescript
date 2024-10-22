@@ -20,6 +20,7 @@ My personal playground for typescript coding and learning.
 - [Type narrowing](#label-type-narrowing)
 - [Discriminated union(tagged union)](#label-discriminated-union(tagged-union))
 - [Function](#label-function)
+- [Interface](#label-interface)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -1135,6 +1136,196 @@ const users: [string, number][] = [
      } else if ('isScratch' in animal) {
        console.log(`The type is Cat, isScratch=${animal.isScratch}`)
      }
+   }
+   ```
+<br>
+   
+## :label: Interface
+- Naming a Type
+   - An interface provides a way to name a type in typescript, similar to a type alias. 
+   - This makes the code more readable and reusable by giving a descriptive name to a particular shape of data.
+      ```typescript
+      interface Person {
+        name: string
+        age: number
+        // Function type expression
+        expressionFunc: () => void
+        // If you want to use overloading you have to use call signature(Don't use function type expression)
+        // Call signature
+        // overloading
+        callSignatureFunc(): void
+        callSignatureFunc(a: number, b: number): void
+        // rest parameter
+        restFunc(...rest: number[]): void
+      }
+      ```
+<br>
+   
+- Defining the structure of objects
+   - Interfaces are particularly useful for defining the structure of an object. 
+   - They specify the expected properties and their types, ensuring that objects adhere to a specific format.
+      ```typescript
+      const user: Person = {
+        name: 'Jisung',
+        age: 30,
+        expressionFunc: () => {
+          console.log('Run expressionFunc() !')
+        },
+        callSignatureFunc: (a?, b?) => {
+          if (a === undefined && b === undefined) {
+            console.log('Run callSignatureFunc() !')
+            return
+          }
+          console.log(`Run callSignatureFunc(${a}, ${b}) !`)
+        },
+        restFunc: (...rest) => {
+          console.log(`Run restFunc([${rest}]) !`)
+        }
+      }
+      
+      console.log(user.name) // Expected output: Jisung
+      
+      user.expressionFunc() // Expected output: Run expressionFunc() !
+      
+      user.callSignatureFunc() // Expected output: Run callSignatureFunc() !
+      user.callSignatureFunc(1, 2) // Expected output: Run callSignatureFunc(1, 2) !
+      
+      user.restFunc() // Expected output: Run restFunc([]) !
+      user.restFunc(1, 2, 3) // Expected output: Run restFunc([1,2,3]) !
+      user.restFunc(1, 2, 3, 4, 5) // Expected output: Run restFunc([1,2,3,4,5]) !
+      ```
+<br>
+   
+- Special Features
+   - Inheritance
+      - Interfaces support inheritance through the extends keyword, allowing one interface to inherit properties from another. 
+      - This is useful for creating more specialized versions of an interface while keeping the code DRY (Don’t Repeat Yourself).
+         ```typescript
+         interface Employee extends Person {
+           role: string
+         }
+         ```
+   <br>
+
+   - Merging
+      - One of the unique features of interfaces is that they can be merged. 
+      - If two interfaces with the same name are declared, TypeScript will automatically merge their properties, making it easier to extend functionality.
+         ```typescript
+         interface Person {
+           gender: string  // added to the existing Person interface
+         }
+         ```
+<br>
+   
+- Interfaces cannot use algebraic types.
+   ```typescript
+   interface Person {
+     name: string
+     age: number
+   }
+   
+   const user1: Person = {
+     name: 'Jisung',
+     age: 30
+   } | number // error - 'number' only refers to a type, but is being used as a value here.
+   
+   
+   const user2: Person = {
+     name: 'Jisung',
+     age: 30
+   } & number // error - 'number' only refers to a type, but is being used as a value here.
+   
+   
+   // if you want to use algebraic types, you should use them as shown below
+   const user3: Person | number = {
+     name: 'Jisung',
+     age: 30
+   }
+   ```
+<br>
+   
+### Inheritance 
+- extends keyword
+   - In typescript, inheritance is a way to define relationships between objects, enhancing code reusability.
+   - The extends keyword is used for the subclass (sub) to inherit the properties and methods of the superclass (super).
+   - The subclass automatically inherits all properties and methods of the superclass but can also define additional properties.
+      ```typescript
+      interface Animal {
+        name: string
+        color: string
+      }
+      
+      interface Dog extends Animal {
+        isBark: boolean
+      }
+      
+      const dog: Dog = {
+        name: '',
+        color: '',
+        isBark: true
+      }
+      ```
+<br>
+   
+- property type redefinition
+   - If a subclass wants to redefine the type of a property inherited from a superclass, that type must be in a super-sub relationship with the superclass. In other words, the subclass type must include the superclass type to avoid errors.
+   - In TypeScript, it is possible to refine the types of inherited properties, but they cannot be changed to completely different types. Violating this principle will result in type compatibility issues.
+      ```typescript
+      interface Animal {
+        name: string
+        color: string
+      }
+      
+      interface Dog extends Animal {
+        name: 'hello'
+        isBark: boolean
+      }
+      ```
+<br>
+   
+- multiple inheritance
+   - In TypeScript, multiple inheritance refers to the capability of inheriting from multiple interfaces.
+   - This allows a single interface to include properties and methods from several other interfaces.
+   - Multiple inheritance is achieved using the extends keyword, and the interfaces being inherited are separated by commas.
+      ```typescript
+      interface Animal {
+        name: string
+        color: string
+      }
+      
+      interface Dog extends Animal {
+        isBark: boolean
+      }
+      
+      interface Cat extends Animal {
+        isScratch: boolean
+      }
+      
+      interface DogCat extends Dog, Cat {}
+      
+      const dogCat: DogCat = {
+        name: '',
+        color: '',
+        isBark: true,
+        isScratch: true
+      }
+      ```
+      <br>
+
+### Interface declaration merging
+- When an interface with the same name is declared multiple times, TypeScript merges them into a single interface.
+   ```typescript
+   interface Person {
+     name: string
+   }
+   
+   interface Person {
+     age: number
+   }
+   
+   const person: Person = {
+     name: '',
+     age: 20
    }
    ```
 <br>
