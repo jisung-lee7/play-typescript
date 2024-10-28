@@ -21,6 +21,7 @@ My personal playground for typescript coding and learning.
 - [Discriminated union(tagged union)](#label-discriminated-union(tagged-union))
 - [Function](#label-function)
 - [Interface](#label-interface)
+- [Class](#label-class)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -1329,3 +1330,196 @@ const users: [string, number][] = [
    }
    ```
 <br>
+   
+## :label: Class
+```typescript
+class Employee {
+  // Field
+  name: string
+  age: number
+  position: string
+
+  // Constructor
+  constructor(name: string, age: number, position: string) {
+    this.name = name
+    this.age = age
+    this.position = position
+  }
+
+  // Method
+  work() {
+    console.log('work !')
+  }
+}
+
+const employeeA = new Employee('Jisung', 20, 'developer')
+console.log(employeeA) // Expected output: Employee { name: 'Jisung', age: 20, position: 'developer' }
+employeeA.work() // Expected output: work !
+
+// In typescript, a class can be used as a type.
+const employeeB: Employee = {
+  name: 'Jisung',
+  age: 20,
+  position: 'developer',
+  work() {
+    console.log('work !!!')
+  }
+}
+
+console.log(employeeB) // Expected output: { name: 'Jisung', age: 20, position: 'developer', work: [Function: work] }
+employeeB.work() // work !!!
+```
+<br>
+
+### Inheritance of a class
+```typescript
+class Employee {
+  // Field
+  name: string
+  age: number
+  position: string
+
+  // Constructor
+  constructor(name: string, age: number, position: string) {
+    this.name = name
+    this.age = age
+    this.position = position
+  }
+
+  // Method
+  work() {
+    console.log('work !')
+  }
+}
+
+class ExecutiveOfficer extends Employee {
+  officeNumber: number
+
+  constructor(
+    name: string,
+    age: number,
+    position: string,
+    officeNumber: number
+  ) {
+    super(name, age, position)
+    this.officeNumber = officeNumber
+  }
+}
+
+const employee = new ExecutiveOfficer('Jisung', 20, 'developer', 7)
+console.log(employee) // Expected output: ExecutiveOfficer { name: 'Jisung', age: 20, position: 'developer', officeNumber: 7}
+```
+<br>
+   
+### Access modifier 
+```typescript
+class Employee {
+  nothingVar: string // default (if nothing is specified) is public
+  public publicVar: string
+  private privateVar: string
+  protected protectedVar: string
+
+  constructor(
+    nothingVar: string,
+    publicVar: string,
+    privateVar: string,
+    protectedVar: string
+  ) {
+    this.nothingVar = nothingVar
+    this.publicVar = publicVar
+    this.privateVar = privateVar
+    this.protectedVar = protectedVar
+  }
+
+  parentFunc() {
+    this.nothingVar = 'runNothingVar'
+    this.publicVar = 'runPublicVar'
+    this.privateVar = 'runPrivateVar'
+    this.protectedVar = 'runProtectedVar'
+  }
+}
+
+const pEmployee = new Employee('nothing', 'public', 'private', 'protected')
+pEmployee.nothingVar = 'changedNothing'
+pEmployee.publicVar = 'changedPublic'
+// pEmployee.privateVar = 'changedPriavte' // error - Property 'privateVar' is private and only accessible within class 'Employee'.
+// pEmployee.protectedVar = 'changedProtected' // error - Property 'protectedVar' is protected and only accessible within class 'Employee' and its subclasses.
+
+class childEmployee extends Employee {
+  childVar: string
+
+  constructor(
+    nothingVar: string,
+    publicVar: string,
+    privateVar: string,
+    protectedVar: string,
+    childVar: string
+  ) {
+    super(nothingVar, publicVar, privateVar, protectedVar)
+    this.childVar = childVar
+  }
+
+  childFunc() {
+    this.nothingVar = 'runNothingVar'
+    this.publicVar = 'runPublicVar'
+    this.privateVar = 'runPrivateVar' // error - Property 'privateVar' is private and only accessible within class 'Employee'.
+    this.protectedVar = 'runProtectedVar'
+  }
+}
+
+const cEmployee = new childEmployee(
+  'nothing',
+  'public',
+  'private',
+  'protected',
+  'child'
+)
+
+cEmployee.nothingVar = 'changedNothing'
+cEmployee.publicVar = 'changedPublic'
+cEmployee.privateVar = 'changedPriavte' // error - Property 'privateVar' is private and only accessible within class 'Employee'.
+cEmployee.protectedVar = 'changedProtected' // error - Property 'protectedVar' is protected and only accessible within class 'Employee' and its subclasses.
+```
+<br>
+   
+### Access modifier(in constructor)
+```typescript
+class Employee {
+  // If access modifiers are used in the constructor, you can omit fields and the implementation of constructor.
+  constructor(
+    public publicVar: string,
+    private privateVar: string,
+    protected protectedVar: string
+  ) {}
+}
+
+const employee = new Employee('public', 'private', 'protected')
+console.log(employee) // Expected output: Employee { publicVar: 'public', privateVar: 'private', protectedVar: 'protected' }
+```
+<br>
+   
+### Interface and class
+- interfaces are always public, cannot be changed.
+   ```typescript
+   interface CharacterInterface {
+     name: String
+     moveSpeed: number
+     move(): void
+   }
+   
+   // error - Property 'name' is private in type 'Character' but not in type 'CharacterInterface'.
+   class Character implements CharacterInterface {
+     constructor(
+       private name: string,
+       public moveSpeed: number,
+       private extra: string
+     ) {}
+   
+     move(): void {
+       console.log(`Move at speed ${this.moveSpeed}.`)
+     }
+   }
+   ```
+<br>
+   
+
