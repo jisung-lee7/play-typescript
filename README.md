@@ -22,6 +22,7 @@ My personal playground for typescript coding and learning.
 - [Function](#label-function)
 - [Interface](#label-interface)
 - [Class](#label-class)
+- [Generics](#label-generics)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -1522,4 +1523,362 @@ console.log(employee) // Expected output: Employee { publicVar: 'public', privat
    ```
 <br>
    
+## :label: Generics
+- Without generics, we would either have to give the identity function a specific type or we could describe the identity function using the any type.
+   ```typescript
+   function identityFunc(arg: number): number {
+     return arg
+   }
+   
+   function usingAnyfunc(value: any): any {
+     return value
+   }
+   
+   let num = usingAnyfunc(10) // num: any
+   
+   let bool = usingAnyfunc(true) // bool: any
+   // If we don’t use generics, we have to use type guard or some other way.
+   if (typeof bool === 'boolean') {
+     bool // bool: boolean
+   }
+   
+   let str = usingAnyfunc('string') // str: any
+   ```
+<br>
+   
+- Use generics
+- ```<Type>``` is a type variable. 
+   - Also known as type parameter.
+   - Also known as generic type variable.
+   - Also known as generic type parameter.
+- The type of a ```<Type>``` is determined when identityFunc is called.
+   ```typescript
+   function identityFunc<Type>(arg: Type): Type {
+     return arg;
+   }```
+<br>
 
+- Typically, <Type> uses T (Type), U, K (Key), and V (Value) instead of 'Type'.
+   ```typescript
+   function func<T>(value: T): T {
+     return value
+   }
+   
+   let num = func(10) // num: number
+   let bool = func(true) // bool: boolean
+   let str = func('string') // str: string
+   let arr = func([1, 2, 3]) // arr: number[]
+   let arrTuple = func<[number, number]>([1, 2]) // arrTuple: [number, number]
+   let numStr = func<string>(7) // numStr: string, error - Argument of type 'number' is not assignable to parameter of type 'string'.
+   ```
+<br>
+
+- Example 01 - without generics
+   ```typescript
+   function swap(a: any, b: any) {
+     return [b, a]
+   }
+   
+   const [a, b] = swap(1, '2') // a: any, b: any
+   ```
+<br>
+   
+- Example 01 - with generics
+   ```typescript
+   function swap<T, U>(a: T, b: U) {
+     return [b, a]
+   }
+   
+   const [a, b] = swap(1, '2') // 
+   ```
+<br>
+   
+- Example 02 - without generics
+   ```typescript
+   function returnFirstValue(data: any) {
+     return data[0]
+   }
+   
+   let num = returnFirstValue([0, 1, 2]) // num: any
+   let str = returnFirstValue([1, 'hello', 'mynameis']) // str: any
+   ```
+<br>
+   
+- Example 02 - with generics - union type
+   ```typescript
+   function returnFirstValue<T>(data: T[]) {
+     return data[0]
+   }
+   
+   let num = returnFirstValue([0, 1, 2]) // num: number
+   let str = returnFirstValue([1, 'hello', 'mynameis']) // str: string | number
+   ```
+<br>
+   
+- Example 02 - with generics - with tuple(When you don’t want to use a union type, for example, if you want to set the first element of an array to a specific type.)
+   ```typescript
+   function returnFirstValue<T>(data: [T, ...unknown[]]) {
+     return data[0]
+   }
+   
+   let num = returnFirstValue([0, 1, 2]) // num: number
+   let str = returnFirstValue([1, 'hello', 'mynameis']) // str: number
+   ```
+<br>
+
+- Example 03 - without generics
+   ```typescript
+   function getLength(data: any) {
+     return data.length
+   }
+   
+   let var1 = getLength([1, 2, 3]) // var1: any
+   let var2 = getLength('12345') // var2: any
+   let var3 = getLength({ length: 10 }) // var3: any
+   let var4 = getLength(10) // var4: any
+   ```
+<br>
+   
+- Example 03 - with generics
+   ```typescript
+   function getLength<T extends { length: number }>(data: T) {
+     return data.length
+   }
+   
+   // Same as below:
+   // interface InterfaceA {
+   //   length: number
+   // }
+   //
+   // interface InterfaceB extends InterfaceA {}
+   
+   let var1 = getLength([1, 2, 3]) // var1: number
+   let var2 = getLength('12345') // var12 number
+   let var3 = getLength({ length: 10 }) // var3: number
+   let var4 = getLength(10) // var4: number, error - Argument of type 'number' is not assignable to parameter of type '{ length: number; }'.
+   ```
+<br>
+   
+- Example 04 - define forEach
+   ```typescript
+   const arr = [1, 2, 3]
+   
+   function forEach<T>(arr: T[], callback: (item: T) => void) {
+     for (let i = 0; i < arr.length; i++) {
+       callback(arr[i])
+     }
+   }
+   
+   forEach(arr, (item) => {
+     console.log(item.toFixed())
+   })
+   ```
+<br>
+
+- Example 05 - define map
+   ```typescript
+   const arr = [1, 2, 3]
+   
+   function map<T, U>(arr: T[], callback: (item: T) => U) {
+     let result = []
+     for (let i = 0; i < arr.length; i++) {
+       result.push(callback(arr[i]))
+     }
+   
+     return result
+   }
+   
+   map(arr, (item) => item * 2)
+   map(['hi', 'hello'], (item) => parseInt(item))
+   ```
+<br>
+    
+### Generic interface
+   ```typescript
+   interface KeyPair<K, V> {
+     key: K
+     value: V
+   }
+   
+   let keyPair: KeyPair<string, number> = {
+     key: 'key',
+     value: 0
+   }
+   
+   let keyPair2: KeyPair<boolean, string[]> = {
+     key: true,
+     value: ['1']
+   }
+   ```
+<br>
+
+- Example 01 - (without generics)
+   ```typescript
+   interface Student {
+     type: 'student'
+     school: string
+   }
+   
+   interface Developer {
+     type: 'developer'
+     skill: string
+   }
+   
+   interface User {
+     name: string
+     profile: Student | Developer
+   }
+   
+   function goToSchool(user: User) {
+     if (user.profile.type !== 'student') {
+       console.log('Invalid access')
+       return
+     }
+   
+     const school = user.profile.school
+     console.log(`Complelte go to ${school}`)
+   }
+   
+   const developerUser: User = {
+     name: 'Jisung',
+     profile: {
+       type: 'developer',
+       skill: 'TypeScript'
+     }
+   }
+   
+   const studentUser: User = {
+     name: 'Jenny',
+     profile: {
+       type: 'student',
+       school: 'university'
+     }
+   }
+    
+   ```
+<br>
+
+- Example 01 - (with generics)
+   ```typescript
+   interface Student {
+     type: 'student'
+     school: string
+   }
+   
+   interface Developer {
+     type: 'developer'
+     skill: string
+   }
+   
+   interface User<T> {
+     name: string
+     profile: T
+   }
+   
+   function goToSchool(user: User<Student>) {
+     const school = user.profile.school
+     console.log(`Complelte go to ${school}`)
+   }
+   
+   const developerUser: User<Developer> = {
+     name: 'Jisung',
+     profile: {
+       type: 'developer',
+       skill: 'TypeScript'
+     }
+   }
+   
+   const studentUser: User<Student> = {
+     name: 'Jenny',
+     profile: {
+       type: 'student',
+       school: 'university'
+     }
+   }
+   ```
+<br>
+
+- With index signature
+   ```typescript
+   interface Map<V> {
+     [key: string]: V
+   }
+   
+   let stringMap: Map<string> = {
+     key: 'value'
+   }
+   
+   let booleanMap: Map<boolean> = {
+     key: true
+   }
+   ```
+<br>
+   
+### Generic type alias
+- With index signature
+   ```typescript
+   type Map<V> = {
+     [key: string]: V
+   }
+   
+   let stringMap: Map<string> = {
+     key: 'hello'
+   }
+   ```
+<br>
+   
+### Generic class
+- Example 01 - without generics
+   ```typescript
+   class List {
+     constructor(private list: number[]) {}
+   
+     push(data: number) {
+       this.list.push(data)
+     }
+   
+     pop() {
+       return this.list.pop()
+     }
+   
+     print() {
+       console.log(this.list)
+     }
+   }
+   
+   const numberList = new List([1, 2, 3])
+   numberList.pop()
+   numberList.push(4)
+   numberList.print()
+   ```
+<br>
+   
+- Example 01 - with generics
+   ```typescript
+   class List<T> {
+     constructor(private list: T[]) {}
+   
+     push(data: T) {
+       this.list.push(data)
+     }
+   
+     pop() {
+       return this.list.pop()
+     }
+   
+     print() {
+       console.log(this.list)
+     }
+   }
+   
+   const numberList = new List([1, 2, 3]) // numberList: List<number>
+   numberList.pop()
+   numberList.push(4)
+   numberList.print()
+   
+   const stringList = new List(['1', '2', '3']) // stringList: List<string>
+   stringList.pop()
+   stringList.push('hello')
+   stringList.print()
+   ```
+<br>
