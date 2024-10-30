@@ -25,6 +25,7 @@ My personal playground for typescript coding and learning.
 - [Generics](#label-generics)
 - [Promise](#label-promise)
 - [Indexed access types](#label-indexed-access-types)
+- [Typeof type operator](#label-typeof-type-operator)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -2064,6 +2065,20 @@ console.log(employee) // Expected output: Employee { publicVar: 'public', privat
    type Tup3 = Tup[3] // Tuple type 'Tup' of length '3' has no element at index '3'.
    
    type TupNum = Tup[number] //  TupNum: string | number | boolean
+   ```
+<br>
+   
+## :label: Typeof type operator
+- JavaScript already has a typeof operator you can use in an expression context:
+   ```typescript
+   console.log(typeof "Hello world") // Expected output: string
+   ```
+<br>
+
+- TypeScript adds a typeof operator you can use in a type context to refer to the type of a variable or property:
+   ```typescript
+   let strVar = 'hello'
+   let something: typeof strVar // something: string
    ```
 <br>
 
