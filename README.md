@@ -23,6 +23,7 @@ My personal playground for typescript coding and learning.
 - [Interface](#label-interface)
 - [Class](#label-class)
 - [Generics](#label-generics)
+- [Promise](#label-promise)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -1880,5 +1881,68 @@ console.log(employee) // Expected output: Employee { publicVar: 'public', privat
    stringList.pop()
    stringList.push('hello')
    stringList.print()
+   ```
+<br>
+
+## :label: Promise
+- Example 01
+   ```typescript
+   const promise = new Promise<number>((resolve, reject) => {
+     setTimeout(() => {
+       // resolve(20)
+       reject('failed due to something.')
+     }, 3000)
+   })
+   
+   promise.then((response) => {
+     console.log(response) // response: number
+   })
+   
+   promise.catch((err) => {
+     if (typeof err === 'string') {
+       console.log(err)
+     }
+   })
+   ```
+<br>
+   
+- Example 02
+   ```typescript
+   interface Post {
+     id: number
+     title: string
+     content: string
+   }
+   
+   // Method: 1
+   function fetchPost(): Promise<Post> {
+     return new Promise((resolve, reject) => {
+       setTimeout(() => {
+         resolve({
+           id: 1,
+           title: 'Post title',
+           content: 'Post content'
+         })
+       }, 3000)
+     })
+   }
+   
+   // Method: 2
+   // function fetchPost() {
+   //   return new Promise<Post>((resolve, reject) => {
+   //     setTimeout(() => {
+   //       resolve({
+   //         id: 1,
+   //         title: 'Post title',
+   //         content: 'Post content'
+   //       })
+   //     }, 3000)
+   //   })
+   // }
+   
+   const postRequest = fetchPost()
+   postRequest.then((post) => {
+     post.id
+   })
    ```
 <br>
