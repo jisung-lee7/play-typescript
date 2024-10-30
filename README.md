@@ -24,6 +24,7 @@ My personal playground for typescript coding and learning.
 - [Class](#label-class)
 - [Generics](#label-generics)
 - [Promise](#label-promise)
+- [Indexed access types](#label-indexed-access-types)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -1946,3 +1947,123 @@ console.log(employee) // Expected output: Employee { publicVar: 'public', privat
    })
    ```
 <br>
+   
+## :label: Indexed access types
+- A type that extracts the type of a specific property or element from an object, array, or tuple type.
+- You can only use types when indexing, meaning you can’t use a const to make a variable reference:
+   ```typescript
+   type Person = { age: number; name: string; alive: boolean }
+   
+   const key = 'age'
+   type AgeUseConst = Person[key] // error - Type 'key' cannot be used as an index type.
+   
+   type AgeTypes = ['age']
+   ```
+<br>
+   
+- Looking at the example below, it is difficult to maintain. 
+   ```typescript
+   interface Post {
+     title: string
+     content: string
+     author: {
+       id: number
+       name: string
+       age: number
+     }
+   }
+   
+   function printAuthorInfo(author: { id: number; name: string; age: number }) {
+     console.log(`${author.name}-${author.id}`)
+   }
+   
+   const post: Post = {
+     title: 'Post title',
+     content: 'Post content',
+     author: {
+       id: 1,
+       name: 'Jisung',
+       age: 20
+     }
+   }
+   
+   printAuthorInfo(post.author)
+   ```
+<br>
+
+- An object that uses Indexed access types.
+   ```typescript
+   interface Post {
+     title: string
+     content: string
+     author: {
+       id: number
+       name: string
+       age: number
+     }
+   }
+   
+   function printAuthorInfo(author: Post['author']) {
+     console.log(`${author.name}-${author.id}`)
+   }
+   
+   const post: Post = {
+     title: 'Post title',
+     content: 'Post content',
+     author: {
+       id: 1,
+       name: 'Jisung',
+       age: 20
+     }
+   }
+   
+   printAuthorInfo(post.author)
+   ```
+<br>
+
+- An array that uses Indexed access types.
+   ```typescript
+   type PostList = {
+     title: string
+     content: string
+     author: {
+       id: number
+       name: string
+       age: number
+     }
+   }[]
+   
+   function printAuthorInfo(author: PostList[number]['author']) {
+     console.log(`${author.name}-${author.id}`)
+   }
+   
+   const post: PostList[number] = {
+     title: 'Post title',
+     content: 'Post content',
+     author: {
+       id: 1,
+       name: 'Jisung',
+       age: 20
+     }
+   }
+   
+   printAuthorInfo(post.author)
+   ```
+<br>
+
+- A tuple that uses Indexed access types.
+   ```typescript
+   type Tup = [number, string, boolean]
+   
+   type Tup0 = Tup[0]
+   
+   type Tup1 = Tup[1]
+   
+   type Tup2 = Tup[2]
+   
+   type Tup3 = Tup[3] // Tuple type 'Tup' of length '3' has no element at index '3'.
+   
+   type TupNum = Tup[number] //  TupNum: string | number | boolean
+   ```
+<br>
+
