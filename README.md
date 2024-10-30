@@ -26,6 +26,7 @@ My personal playground for typescript coding and learning.
 - [Promise](#label-promise)
 - [Indexed access types](#label-indexed-access-types)
 - [Typeof type operator](#label-typeof-type-operator)
+- [Keyof type operator](#label-keyof-type-operator)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -2082,3 +2083,62 @@ console.log(employee) // Expected output: Employee { publicVar: 'public', privat
    ```
 <br>
 
+## :label: Keyof type operator
+- An operator that extracts all property keys from a specific object type as a string literal union type.
+- Looking at the example below, it is difficult to maintain. 
+   ```typescript
+   interface Person {
+     name: string
+     age: number
+   }
+   
+   function getPropertyKey(person: Person, key: 'name' | 'age') {
+     return person[key]
+   }
+   
+   const person: Person = {
+     name: 'Jisung',
+     age: 20
+   }
+   
+   getPropertyKey(person, 'name')
+   ```
+<br>
+
+- Uses keyof type operator
+   ```typescript
+   interface Person {
+     name: string
+     age: number
+   }
+   
+   function getPropertyKey(person: Person, key: keyof Person) {
+     return person[key]
+   }
+   
+   const person: Person = {
+     name: 'Jisung',
+     age: 20
+   }
+   
+   getPropertyKey(person, 'name')
+   ```
+<br>
+   
+- Uses keyof and typeof type operator
+   ```typescript
+   type Person = typeof person
+   
+   function getPropertyKey(person: Person, key: keyof typeof person) {
+     return person[key]
+   }
+   
+   const person = {
+     name: 'Jisung',
+     age: 20
+   }
+   
+   getPropertyKey(person, 'name')
+   ```
+<br>
+   
