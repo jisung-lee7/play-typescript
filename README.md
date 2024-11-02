@@ -24,7 +24,7 @@ My personal playground for typescript coding and learning.
 - [Class](#label-class)
 - [Generics](#label-generics)
 - [Promise](#label-promise)
-- [Indexed access types](#label-indexed-access-types)
+- [Indexed access types(Lookup type)](#label-indexed-access-types(lookup-type))
 - [Typeof type operator](#label-typeof-type-operator)
 - [Keyof type operator](#label-keyof-type-operator)
 
@@ -1950,14 +1950,14 @@ console.log(employee) // Expected output: Employee { publicVar: 'public', privat
    ```
 <br>
    
-## :label: Indexed access types
+## :label: Indexed access types(Lookup type)
 - A type that extracts the type of a specific property or element from an object, array, or tuple type.
 - You can only use types when indexing, meaning you can’t use a const to make a variable reference:
    ```typescript
    type Person = { age: number; name: string; alive: boolean }
    
    const key = 'age'
-   type AgeUseConst = Person[key] // error - Type 'key' cannot be used as an index type.
+   type AgeUseConst = Person[key] // error - Type 'key' cannot be used as an indexd access type.
    
    type AgeTypes = ['age']
    ```
