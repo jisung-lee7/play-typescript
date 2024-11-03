@@ -29,6 +29,7 @@ My personal playground for typescript coding and learning.
 - [Keyof type operator](#label-keyof-type-operator)
 - [Mapped types](#label-mapped-types)
 - [Template literal types](#label-template-literal-types)
+- [Conditional types](#label-conditional-types)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -2217,3 +2218,143 @@ console.log(employee) // Expected output: Employee { publicVar: 'public', privat
    const coloredAnimal: ColorAnimal = ''
    ```
 <br>
+   
+## :label: Conditional types
+   ```typescript
+   type A = number extends string ? string : number // A: number
+   
+   type ObjA = {
+     a: number
+   }
+   
+   type ObjB = {
+     a: number
+     b: number
+   }
+   
+   type B = ObjB extends ObjA ? number : string // B: number
+   ```
+<br>
+   
+### Conditional types with generics
+- Example 01
+   ```typescript
+   type StringNumberSwitch<T> = T extends number ? string : number
+   
+   let varA: StringNumberSwitch<number> // varA: string
+   let varB: StringNumberSwitch<string> // varB: number
+   ```
+<br>
+   
+- Example 02
+   ```typescript
+   function removeSpaces<T>(text: T): T extends string ? string : undefined
+   function removeSpaces(text: any) {
+     if (typeof text === 'string') {
+       return text.replaceAll(' ', '')
+     } else {
+       return undefined
+     }
+   }
+   
+   let result = removeSpaces('hi im jisung') // result: string
+   
+   let result2 = removeSpaces(undefined) // result: undefined
+   ```
+<br>
+   
+### Distributive conditional types
+   ```typescript
+   type StringNumberSwitch<T> = T extends number ? string : number
+   
+   let a: StringNumberSwitch<number>
+   let b: StringNumberSwitch<string>
+   
+   let c: StringNumberSwitch<number | string> // c: string | number
+   // StringNumberSwitch<number> | StringNumberSwitch<string>
+   
+   let d: StringNumberSwitch<boolean | number | string> // d: string | number
+   // StringNumberSwitch<boolean> | StringNumberSwitch<number> | StringNumberSwitch<string>
+   ```
+<br>
+   
+- Remove a specific type from a union type
+   ```typescript
+   type Exclude<T, U> = T extends U ? never : T
+   
+   type A = Exclude<number | string | boolean, string>
+   // Step 1
+   // Exclude<number, string> |
+   // Exclude<string, string> |
+   // Exclude<boolean, string>
+   
+   // Step 2
+   // number extends string -> false -> number |
+   // string extends string -> true -> never |
+   // boolean extends string -> false -> boolean
+   
+   // Result
+   // number | never | boolean -> number | boolean
+   ```
+<br>
+   
+- Extract only a specific type from a union type
+   ```typescript
+   type Extract<T, U> = T extends U ? T : never
+   
+   type B = Extract<number | string | boolean, string>
+   // Step 1
+   // Extract<number, string> |
+   // Extract<string, string> |
+   // Extract<boolean, string>
+   
+   // Step 2
+   // number extends string -> false -> never |
+   // string extends string -> true -> string |
+   // boolean extends string -> false -> never
+   
+   // Result
+   // never | string | never -> string
+   ```
+<br>
+   
+### Infer(Inference)
+- Example 01 - without infer
+   ```typescript
+   type FuncA = () => string
+   
+   type FuncB = () => number
+   
+   type ReturnType<T> = T extends () => string ? string : never
+   
+   type A = ReturnType<FuncA> // A: string
+   type B = ReturnType<FuncB> // B: never
+   ```
+<br>
+
+- Example 01 - with infer
+   ```typescript
+   type FuncA = () => string
+   
+   type FuncB = () => number
+   
+   type ReturnType<T> = T extends () => infer R ? R : never
+   
+   type A = ReturnType<FuncA> // A: string
+   type B = ReturnType<FuncB> // B: number
+   type C = ReturnType<number> // C: never
+   ```
+<br>
+   
+- Example 02 - with infer
+   ```typescript
+   type PromiseUnpack<T> = T extends Promise<infer R> ? R : never
+   // 1. T must be Promise type.
+   // 2. It must returns result type of Promise type.
+   
+   type PromiseA = PromiseUnpack<Promise<number>> // PromiseA = number
+   
+   type PromiseB = PromiseUnpack<Promise<string>> // PromiseA = string
+   ```
+<br>
+
