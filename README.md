@@ -27,6 +27,7 @@ My personal playground for typescript coding and learning.
 - [Indexed access types(Lookup type)](#label-indexed-access-types(lookup-type))
 - [Typeof type operator](#label-typeof-type-operator)
 - [Keyof type operator](#label-keyof-type-operator)
+- [Mapped types](#label-mapped-types)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -2142,3 +2143,64 @@ console.log(employee) // Expected output: Employee { publicVar: 'public', privat
    ```
 <br>
    
+## :label: Mapped types
+- A type that creates a new object type based on an existing object type.
+- Mapped types can only be used with types, not with interfaces.
+- Example 01 - without Mapped types
+   ```typescript
+   interface User {
+     id: number
+     name: string
+     age: number
+   }
+   
+   interface PartialUser {
+     id?: number
+     name?: string
+     age?: number
+   }
+   
+   function updateUser(user: PartialUser) {
+     // something update feature
+   }
+   
+   updateUser({
+     // id: 1,
+     // name: 'Jisung',
+     age: 25
+   })
+   ```
+<br>
+   
+- Example 01 - with Mapped types
+   ```typescript
+   interface User {
+     id: number
+     name: string
+     age: number
+   }
+   
+   type PartialUser = {
+     // [key in 'id' | 'name' | 'age']?: User[key]
+     [key in keyof User]?: User[key]
+   }
+   
+   type BooleanUser = {
+     // [key in 'id' | 'name' | 'age']: boolean
+     [k in keyof User]: boolean
+   }
+   
+   type ReadonlyUser = {
+     readonly [key in keyof User]: User[key]
+   }
+   
+   function updateUser(user: PartialUser | BooleanUser | ReadonlyUser) {
+     // something update feature
+   }
+   
+   updateUser({
+     age: 25
+   })
+   ```
+<br>
+
