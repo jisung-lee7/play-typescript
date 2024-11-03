@@ -30,6 +30,7 @@ My personal playground for typescript coding and learning.
 - [Mapped types](#label-mapped-types)
 - [Template literal types](#label-template-literal-types)
 - [Conditional types](#label-conditional-types)
+- [Utility types](#label-utility-types)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -2358,3 +2359,93 @@ console.log(employee) // Expected output: Employee { publicVar: 'public', privat
    ```
 <br>
 
+## :label: Utility Types
+- A set of commonly used types pre-defined using type manipulation features like generics, mapped types, and conditional types.
+### Based on mapped types
+#### Partial<T>
+- Constructs a type with all properties of Type set to optional. This utility will return a type that represents all subsets of a given type.
+   ```typescript
+   // If we implement the Partial type it would look like this.
+   type Partial<T> = {
+     [key in keyof T]?: T[key]
+   }
+   ```
+<br>
+
+#### Required<T>
+- Constructs a type consisting of all properties of Type set to required. The opposite of Partial.
+   ```typescript
+   // If we implement the Required type it would look like this.
+   type Required<T> = {
+     [key in keyof T]-?: T[key]
+   }
+   ```
+<br>
+
+#### Readonly<T>
+- Constructs a type with all properties of Type set to readonly, meaning the properties of the constructed type cannot be reassigned.
+   ```typescript
+   // If we implement the Readonly type it would look like this.
+   type Readonly<T> = {
+     readonly [key in keyof T]: T[key]
+   }
+   ```
+<br>
+
+#### Pick<T, K>
+- Constructs a type by picking the set of properties Keys (string literal or union of string literals) from Type.
+   ```typescript
+   // If we implement the Pick type it would look like this.
+   type Pick<T, K extends keyof T> = {
+     [key in K]: T[key]
+   }
+   ```
+<br>
+
+#### Omit<T, K>
+- Constructs a type by picking all properties from Type and then removing Keys (string literal or union of string literals). The opposite of Pick.
+   ```typescript
+   // If we implement the Omit type it would look like this.
+   type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+   ```
+<br>
+
+#### Record<K, V>
+- Constructs an object type whose property keys are Keys and whose property values are Type. This utility can be used to map the properties of a type to another type.
+   ```typescript
+   // If we implement the Record type it would look like this.
+   type Record<K extends keyof any, V> = {
+     [key in K]: V
+   }
+   ```
+<br>
+
+### Based on conditional types
+#### Exclude<T, U>
+- Constructs a type by excluding from UnionType all union members that are assignable to ExcludedMembers.
+   ```typescript
+   // If we implement the Exclude type it would look like this.
+   type Exclude<T, U> = T extends U ? never : T
+   ```
+<br>
+   
+#### Extract<T, U>
+- Constructs a type by extracting from Type all union members that are assignable to Union.
+   ```typescript
+   // If we implement the Extract type it would look like this.
+   type Extract<T, U> = T extends U ? T : never
+   ```
+<br>
+   
+#### ReturnType<T>
+- Constructs a type consisting of the return type of function Type.
+- For overloaded functions, this will be the return type of the last signature.
+   ```typescript
+   // If we implement the ReturnType type it would look like this.
+   type ReturnType<T extends (...args: any) => any> = T extends (
+     ...args: any
+   ) => infer R
+     ? R
+     : never
+   ```
+<br>
