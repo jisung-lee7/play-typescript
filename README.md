@@ -28,6 +28,7 @@ My personal playground for typescript coding and learning.
 - [Typeof type operator](#label-typeof-type-operator)
 - [Keyof type operator](#label-keyof-type-operator)
 - [Mapped types](#label-mapped-types)
+- [Template literal types](#label-template-literal-types)
 
 ## :label: TypeScript
 - TypeScript is a strongly typed programming language that builds on Javascript, giving you better tooling at any scale.
@@ -2204,3 +2205,15 @@ console.log(employee) // Expected output: Employee { publicVar: 'public', privat
    ```
 <br>
 
+## :label: Template literal types
+- A type that only includes strings matching a specified pattern, based on a string literal type.
+   ```typescript
+   type Color = 'red' | 'black' | 'green'
+   type Animal = 'dog' | 'cat' | 'chicken'
+   
+   // type ColorAnimal = 'red-dog' | 'red-cat' | 'red-chicken' | ...
+   type ColorAnimal = `${Color}-${Animal}`
+   
+   const coloredAnimal: ColorAnimal = ''
+   ```
+<br>
